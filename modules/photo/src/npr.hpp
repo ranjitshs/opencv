@@ -62,7 +62,7 @@ class Domain_Filter
         void diffx(const Mat &img, Mat &temp);
         void diffy(const Mat &img, Mat &temp);
         void find_magnitude(Mat &img, Mat &mag);
-        void compute_boxfilter(Mat &output, Mat &hz, Mat &psketch, float radius);
+        void compute_boxfilter(Mat &output, Mat &temphz, Mat &psketch, float radius);
         void compute_Rfilter(Mat &O, Mat &horiz, float sigma_h);
         void compute_NCfilter(Mat &O, Mat &horiz, Mat &psketch, float radius);
         void filter(const Mat &img, Mat &res, float sigma_s, float sigma_r, int flags);
@@ -169,7 +169,7 @@ void Domain_Filter::find_magnitude(Mat &img, Mat &mag)
     mag = 1.0f - mag;
 }
 
-void Domain_Filter::compute_Rfilter(Mat &output, Mat &hz, float sigma_h)
+void Domain_Filter::compute_Rfilter(Mat &output, Mat &temphz, float sigma_h)
 {
     int h = output.rows;
     int w = output.cols;
@@ -184,7 +184,7 @@ void Domain_Filter::compute_Rfilter(Mat &output, Mat &hz, float sigma_h)
 
     for(int i=0;i<h;i++)
         for(int j=0;j<w;j++)
-            V.at<float>(i,j) = pow(a,hz.at<float>(i,j));
+            V.at<float>(i,j) = pow(a,temphz.at<float>(i,j));
 
    for(int i=0; i<h; i++)
     {
@@ -213,15 +213,15 @@ void Domain_Filter::compute_Rfilter(Mat &output, Mat &hz, float sigma_h)
     temp.copyTo(output);
 }
 
-void Domain_Filter::compute_boxfilter(Mat &output, Mat &hz, Mat &psketch, float radius)
+void Domain_Filter::compute_boxfilter(Mat &output, Mat &temphz, Mat &psketch, float radius)
 {
     int h = output.rows;
     int w = output.cols;
     Mat lower_pos = Mat(h,w,CV_32FC1);
     Mat upper_pos = Mat(h,w,CV_32FC1);
 
-    lower_pos = hz - radius;
-    upper_pos = hz + radius;
+    lower_pos = temphz - radius;
+    upper_pos = temphz + radius;
 
     lower_idx = Mat::zeros(h,w,CV_32FC1);
     upper_idx = Mat::zeros(h,w,CV_32FC1);
@@ -231,7 +231,7 @@ void Domain_Filter::compute_boxfilter(Mat &output, Mat &hz, Mat &psketch, float 
     for(int i=0;i<h;i++)
     {
         for(int j=0;j<w;j++)
-            domain_row.at<float>(0,j) = hz.at<float>(i,j);
+            domain_row.at<float>(0,j) = temphz.at<float>(i,j);
         domain_row.at<float>(0,w) = (float) myinf;
 
         Mat lower_pos_row = Mat::zeros(1,w,CV_32FC1);
@@ -304,13 +304,13 @@ void Domain_Filter::compute_boxfilter(Mat &output, Mat &hz, Mat &psketch, float 
     }
     psketch = upper_idx - lower_idx;
 }
-void Domain_Filter::compute_NCfilter(Mat &output, Mat &hz, Mat &psketch, float radius)
+void Domain_Filter::compute_NCfilter(Mat &output, Mat &temphz, Mat &psketch, float radius)
 {
     int h = output.rows;
     int w = output.cols;
     int channel = output.channels();
 
-    compute_boxfilter(output,hz,psketch,radius);
+    compute_boxfilter(output,temphz,psketch,radius);
 
     Mat box_filter = Mat::zeros(h,w+1,CV_32FC3);
 

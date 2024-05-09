@@ -202,7 +202,7 @@ inline const char * const *ElementaryTypeNames() {
 // We're explicitly defining the signedness since the signedness of integer
 // bitfields is otherwise implementation-defined and causes warnings on older
 // GCC compilers.
-struct TypeCode {
+struct __attribute__((packed)) TypeCode{
   // ElementaryType
   unsigned short base_type : 4;
   // Either vector (in table) or array (in struct)

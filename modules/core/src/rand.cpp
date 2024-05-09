@@ -275,11 +275,11 @@ randn_0_1_32f( float* arr, int len, uint64* state )
         float x, y;
         for(;;)
         {
-            int hz = (int)temp;
+            int highz = (int)temp;
             temp = RNG_NEXT(temp);
-            int iz = hz & 127;
-            x = hz*wn[iz];
-            if( (unsigned)std::abs(hz) < kn[iz] )
+            int iz = highz & 127;
+            x = highz*wn[iz];
+            if( (unsigned)std::abs(highz) < kn[iz] )
                 break;
             if( iz == 0) // iz==0, handles the base strip
             {
@@ -293,7 +293,7 @@ randn_0_1_32f( float* arr, int len, uint64* state )
                     y = (float)-std::log(y+FLT_MIN);
                 }	// .2904764 is 1/r
                 while( y + y < x*x );
-                x = hz > 0 ? r + x : -r - x;
+                x = highz > 0 ? r + x : -r - x;
                 break;
             }
             // iz > 0, handle the wedges of other strips

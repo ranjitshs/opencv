@@ -126,7 +126,7 @@ void* allocSingletonNewBuffer(size_t size) { return malloc(size); }
 #if defined __QNX__
 #  include <sys/elf.h>
 #else
-#  include <elf.h>
+//#  include <elf.h>
 #endif
 #if defined __ANDROID__ || defined __linux__
 #  include <linux/auxvec.h>
@@ -139,7 +139,7 @@ void* allocSingletonNewBuffer(size_t size) { return malloc(size); }
 
 
 #if (defined __ppc64__ || defined __PPC64__) && defined __unix__
-# include "sys/auxv.h"
+//# include "sys/auxv.h"
 # ifndef AT_HWCAP2
 #   define AT_HWCAP2 26
 # endif

@@ -489,11 +489,6 @@ void throwErrnoExc (const std::string &text, int errnum)
 	    throw EstrpipeExc (tmp);
       #endif
 
-      #if defined (ENOTEMPTY)
-	  case ENOTEMPTY:
-	    throw EnotemptyExc (tmp);
-      #endif
-
       #if defined (EUSERS)
 	  case EUSERS:
 	    throw EusersExc (tmp);
