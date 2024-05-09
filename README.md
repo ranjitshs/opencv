@@ -1,38 +1,28 @@
-## OpenCV: Open Source Computer Vision Library
+**AIX compilation using open-xl**
 
-### Keep OpenCV Free
+ulimit -m unlimited
 
-OpenCV is raising funds to keep the library free for everyone, and we need the support of the entire community to do it. [Donate to OpenCV on IndieGoGo](http://igg.me/at/opencv5) before the campaign ends on December 16 to show your support.
+ulimit -d unlimited
 
-### Resources
+ulimit -f unlimited
 
-* Homepage: <https://opencv.org>
-  * Courses: <https://opencv.org/courses>
-* Docs: <https://docs.opencv.org/4.x/>
-* Q&A forum: <https://forum.opencv.org>
-  * previous forum (read only): <http://answers.opencv.org>
-* Issue tracking: <https://github.com/opencv/opencv/issues>
-* Additional OpenCV functionality: <https://github.com/opencv/opencv_contrib>
+export OBJECT_MODE=64
 
+export CC="/opt/IBM/openxlC/17.1.2/bin/ibm-clang  -pthread -m64  " 
 
-### Contributing
+export CXX="/opt/IBM/openxlC/17.1.2/bin/ibm-clang++_r  -pthread -m64"
 
-Please read the [contribution guidelines](https://github.com/opencv/opencv/wiki/How_to_contribute) before starting work on a pull request.
+export CFLAGS="-mcmodel=large"
 
-#### Summary of the guidelines:
+export CXXFLAGS="-mcmodel=large"
 
-* One pull request per issue;
-* Choose the right base branch;
-* Include tests and documentation;
-* Clean up "oops" commits before submitting;
-* Follow the [coding style guide](https://github.com/opencv/opencv/wiki/Coding_Style_Guide).
+cmake . -B build \
+	-DBUILD_opencv_python3=OFF \
+	-DBUILD_opencv_python2=OFF \
+	-DBUILD_SHARED_LIBS=ON \
+	-DOPENCV_SKIP_GC_SECTIONS=ON \
+	-DCMAKE_INSTALL_PREFIX=/usr/local
 
-### Additional Resources
+cmake --build build -j 4
 
-* [Submit your OpenCV-based project](https://form.jotform.com/233105358823151) for inclusion in Community Friday on opencv.org
-* [Subscribe to the OpenCV YouTube Channel](http://youtube.com/@opencvofficial) featuring OpenCV Live, an hour-long streaming show
-* [Follow OpenCV on LinkedIn](http://linkedin.com/company/opencv/) for daily posts showing the state-of-the-art in computer vision &AI
-* [Apply to be an OpenCV Volunteer](https://form.jotform.com/232745316792159) to help organize events and online campaigns as well as amplify them
-* [Follow OpenCV on Mastodon](http://mastodon.social/@opencv) in the Fediverse
-* [Follow OpenCV on Twitter](https://twitter.com/opencvlive)
-* [OpenCV.ai](https://opencv.ai): Computer Vision and AI development services from the OpenCV team.
+cmake  --install build
