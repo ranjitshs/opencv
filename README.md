@@ -1,5 +1,5 @@
 **AIX compilation using open-xl**
-
+```bash
 ulimit -m unlimited
 
 ulimit -d unlimited
@@ -26,3 +26,4 @@ cmake . -B build \
 cmake --build build -j 4
 
 cmake  --install build
+```
